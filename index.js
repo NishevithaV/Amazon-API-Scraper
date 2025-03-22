@@ -1,6 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-// const cheerio = require('cheerio');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -28,6 +27,7 @@ app.get('/products/:productId', async (req, res) => {
 
 // Product Reviews 
 app.get('/products/:productId/reviews', async (req, res) => {
+
     const { productId } = req.params;
     try {
         const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/product-reviews/${productId}`);
@@ -38,6 +38,29 @@ app.get('/products/:productId/reviews', async (req, res) => {
     }
 });
 
+// Product Offers 
+app.get('/products/:productId/offers', async (req, res) => {
+    
+    const { productId } = req.params;
+    try {
+        const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/gp/offer-listing/${productId}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
+// Search Query 
+app.get('/search/:searchQuery', async (req, res) => {
+    
+    const { searchQuery } = req.params;
+    try {
+        const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/s?k=${searchQuery}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
