@@ -4,8 +4,7 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-const apiKey = ``;
-const baseUrl = `http://api.scraperapi.com?api_key=${apiKey}&autoparse=true`
+const scraperUrl = (apiKey) => `http://api.scraperapi.com?api_key=${apiKey}&autoparse=true`;
 
 app.use(express.json());
 
@@ -16,8 +15,9 @@ app.get('/', (req, res) => {
 // Product Details
 app.get('/products/:productId', async (req, res) => {
     const { productId } = req.params;
+    const { api_key } = req.query;
     try {
-        const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/dp/${productId}`);
+        const response = await axios.get(`${scraperUrl(api_key)}&url=https://www.amazon.com/dp/${productId}`);
         res.json(response.data);
 
     } catch (error) {
@@ -29,8 +29,9 @@ app.get('/products/:productId', async (req, res) => {
 app.get('/products/:productId/reviews', async (req, res) => {
 
     const { productId } = req.params;
+    const { api_key } = req.query;
     try {
-        const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/product-reviews/${productId}`);
+        const response = await axios.get(`${scraperUrl(api_key)}&url=https://www.amazon.com/product-reviews/${productId}`);
         res.json(response.data);
 
     } catch (error) {
@@ -42,8 +43,9 @@ app.get('/products/:productId/reviews', async (req, res) => {
 app.get('/products/:productId/offers', async (req, res) => {
     
     const { productId } = req.params;
+    const { api_key } = req.query;
     try {
-        const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/gp/offer-listing/${productId}`);
+        const response = await axios.get(`${scraperUrl(api_key)}&url=https://www.amazon.com/gp/offer-listing/${productId}`);
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -54,8 +56,9 @@ app.get('/products/:productId/offers', async (req, res) => {
 app.get('/search/:searchQuery', async (req, res) => {
     
     const { searchQuery } = req.params;
+    const { api_key } = req.query;
     try {
-        const response = await axios.get(`${baseUrl}&url=https://www.amazon.com/s?k=${searchQuery}`);
+        const response = await axios.get(`${scraperUrl(api_key)}&url=https://www.amazon.com/s?k=${searchQuery}`);
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ error: error.message });
